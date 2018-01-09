@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
-import './App.css';
-import RecipesContainer from './recipes/RecipesContainer'
+import React from 'react'
+import { shallow } from 'enzyme'
+import RecipeItem from './RecipeItem'
 
 const recipes = [
   {
@@ -18,29 +18,37 @@ const recipes = [
     pescatarian: true,
   },
   {
-    title: 'Spare ribs',
-    summary: 'Spare ribs are a variety of pork ribs cooked and eaten in various cuisines around the world. They are cut from the lower portion of the pig specifically the belly and breastbone, behind the shoulder, and include 11 to 13 long bones.',
-    vegan: false,
-    vegetarian: false,
-    pescatarian: false,
-  },
-  {
     title: 'Agedashi Tofu',
     summary: 'Agedashi Tofu is one of those magical dishes where a few simple ingredients come together in a harmonizing synergy that elevates the dish from humble to divine. It is made with blocks of soft tofu that are coated in a thin layer of potato starch before being lightly fried.',
     vegan: true,
     vegetarian: true,
     pescatarian: false,
-  },
+  }
 ]
 
-class App extends PureComponent {
-  render() {
-    return (
-      <div>
-        <RecipesContainer recipes={ recipes } />
-      </div>
-    )
-  }
-}
+describe ('<RecipeItem />', () => {
+  const container1 = shallow(<RecipeItem { ...recipes[0] } />)
+  const container2 = shallow(<RecipeItem { ...recipes[1] } />)
+  const container3 = shallow(<RecipeItem { ...recipes[2] } />)
 
-export default App;
+  it('is wrapped in a article tag with class name "recipe"', () => {
+    expect(container1).toHaveTagName('article')
+    expect(container1).toHaveClassName('recipe')
+  })
+
+  it('contains the title', () => {
+    expect(container1.find('h1')).toHaveText(recipes[0].title)
+  })
+
+  it('shows a 🥕 when it is vegetarian', () => {
+    expect(container1.find('ul > li')).toHaveText('🥕')
+  })
+
+  it('shows a 🌾 when it is vegan', () => {
+    expect(container3.find('ul > li')).toHaveText('🌾')
+  })
+
+  it('shows a 🐟 when it is pescatarian', () => {
+    expect(container2.find('ul > li')).toHaveText('🐟')
+  })
+})

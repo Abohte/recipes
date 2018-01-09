@@ -1,6 +1,8 @@
-import React, { PureComponent } from 'react';
-import './App.css';
-import RecipesContainer from './recipes/RecipesContainer'
+import React from 'react'
+import { shallow } from 'enzyme'
+import RecipesContainer from './RecipesContainer'
+import Title from '../components/Title'
+import RecipeItem from './RecipeItem'
 
 const recipes = [
   {
@@ -23,24 +25,24 @@ const recipes = [
     vegan: false,
     vegetarian: false,
     pescatarian: false,
-  },
-  {
-    title: 'Agedashi Tofu',
-    summary: 'Agedashi Tofu is one of those magical dishes where a few simple ingredients come together in a harmonizing synergy that elevates the dish from humble to divine. It is made with blocks of soft tofu that are coated in a thin layer of potato starch before being lightly fried.',
-    vegan: true,
-    vegetarian: true,
-    pescatarian: false,
-  },
+  }
 ]
 
-class App extends PureComponent {
-  render() {
-    return (
-      <div>
-        <RecipesContainer recipes={ recipes } />
-      </div>
-    )
-  }
-}
+describe('<RecipesContainer />', () => {
+  const container = shallow(<RecipesContainer recipes={recipes} />)
 
-export default App;
+  it('is wrapped in a div with class name "recipes"', () => {
+    expect(container).toHaveClassName('wrapper')
+    expect(container).toHaveClassName('recipes')
+  })
+
+  it('sets the Title to "All Recipes"', () => {
+    expect(container).toContainReact(<Title content="Recipes" />)
+  })
+
+  it('renders all recipes as a RecipeItem', () => {
+    recipes.map((recipe, index) => {
+      return expect(container).toContainReact(<RecipeItem key={index} { ...recipe } />)
+    })
+  })
+})
