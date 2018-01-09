@@ -1,6 +1,9 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import RecipeItem from './RecipeItem'
+import imageIconPescatarian from '../images/pescatarian.svg'
+import imageIconVegan from '../images/vegan.svg'
+import imageIconVegetarian from '../images/vegetarian.svg'
 
 const recipes = [
   {
@@ -27,28 +30,34 @@ const recipes = [
 ]
 
 describe ('<RecipeItem />', () => {
-  const container1 = shallow(<RecipeItem { ...recipes[0] } />)
-  const container2 = shallow(<RecipeItem { ...recipes[1] } />)
-  const container3 = shallow(<RecipeItem { ...recipes[2] } />)
+  const container = shallow(<RecipeItem { ...recipes[0] } />)
 
   it('is wrapped in a article tag with class name "recipe"', () => {
-    expect(container1).toHaveTagName('article')
-    expect(container1).toHaveClassName('recipe')
+    expect(container).toHaveTagName('article')
+    expect(container).toHaveClassName('recipe')
   })
 
   it('contains the title', () => {
-    expect(container1.find('h1')).toHaveText(recipes[0].title)
+    expect(container.find('h1')).toHaveText(recipes[0].title)
   })
 
-  it('shows a 🥕 when it is vegetarian', () => {
-    expect(container1.find('ul > li')).toHaveText('🥕')
+  it('shows a vegatarion icon when it is vegetarian', () => {
+    expect(container.find('ul > li > img')).toHaveProp('src', imageIconVegetarian)
   })
 
-  it('shows a 🌾 when it is vegan', () => {
-    expect(container3.find('ul > li')).toHaveText('🌾')
+  describe('a vegan recipe', () => {
+    const container = shallow(<RecipeItem { ...recipes[2] } />)
+
+    it('shows a vegan icon when it is vegan', () => {
+      expect(container.find('ul > li > img')).toHaveProp('src', imageIconVegan)
+    })
   })
 
-  it('shows a 🐟 when it is pescatarian', () => {
-    expect(container2.find('ul > li')).toHaveText('🐟')
+  describe('a pescatarian recipe', () => {
+    const container = shallow(<RecipeItem { ...recipes[1] } />)
+
+    it('shows a pescatarian icon when it is pescatarian', () => {
+      expect(container.find('ul > li > img')).toHaveProp('src', imageIconPescatarian)
+    })
   })
 })
